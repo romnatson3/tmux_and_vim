@@ -141,7 +141,7 @@ if [ -n "${TMUX_PANE}" ]; then
   if [[ $pane_id != "$pane_id_prefix"* ]]; then
     # if not, set it to a random ID
     random_id=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16)
-    printf "\034]2;$pane_id_prefix$random_id\033\\"
+    printf "\033]2;$pane_id_prefix$random_id\033\\"
     pane_id=$(tmux display -pt "${TMUX_PANE:?}" "#{pane_title}")
   fi
   # use the pane's random ID for the HISTFILE

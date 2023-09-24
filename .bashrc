@@ -116,6 +116,7 @@ if ! shopt -oq posix; then
   fi
 fi
 
+export TERM=xterm-256color
 export EDITOR=nvim
 # export DISPLAY=172.22.240.1:0
 alias mc='mc --skin modarin256'

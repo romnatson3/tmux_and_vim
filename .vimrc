@@ -66,8 +66,8 @@ set listchars=eol:↲,tab:→→,trail:•,nbsp:↔
 set t_Co=256 " включити 256 кольорів
 
 colorscheme gruvbox
-"colorscheme PaperColor
-"colorscheme molokai_dark
+" colorscheme PaperColor
+" colorscheme molokai_dark
 set background=dark
 
 ":Explore

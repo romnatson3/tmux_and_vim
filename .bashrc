@@ -118,7 +118,7 @@ fi
 
 export TERM=xterm-256color
 export EDITOR=nvim
-# export DISPLAY=172.22.240.1:0
+export DISPLAY=172.22.240.1:0
 alias mc='mc --skin modarin256'
 alias ll="$(cat ~/.ls)"
 alias acc='source env/bin/activate'
@@ -132,28 +132,23 @@ fi
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 
-# HISTS_DIR=$HOME/.bash_history.d
-# mkdir -p "${HISTS_DIR}"
-# if [ -n "${TMUX_PANE}" ]; then
-#   PANE=`tmux display -pt "${TMUX_PANE:?}" '#{session_name}:#{window_index}:#{pane_index}'`
-#   export HISTFILE="${HISTS_DIR}/bash_history_tmux_${PANE}"
-# else
-#   export HISTFILE="${HISTS_DIR}/bash_history_no_tmux"
-# fi
-# export PROMPT_COMMAND="history -a"
-
-pane_id_prefix="resurrect_"
-HISTS_DIR=$HOME/.bash_history.d
-mkdir -p "${HISTS_DIR}"
-if [ -n "${TMUX_PANE}" ]; then
-  pane_id=$(tmux display -pt "${TMUX_PANE:?}" "#{pane_title}")
-  if [[ $pane_id != "$pane_id_prefix"* ]]; then
-    random_id=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16)
-    printf "\033]2;$pane_id_prefix$random_id\033\\"
-    pane_id=$(tmux display -pt "${TMUX_PANE:?}" "#{pane_title}")
-  fi
-  export HISTFILE="${HISTS_DIR}/bash_history_tmux_${pane_id}"
-else
-  export HISTFILE="${HISTS_DIR}/bash_history_no_tmux"
-fi
-export PROMPT_COMMAND="history -a"
+function tmux_history () {
+    if [ -n "${TMUX_PANE}" ]; then
+        HISTS_DIR=$HOME/.bash_history.d
+        if ! [ -d ${HISTS_DIR} ]; then
+            mkdir -p "${HISTS_DIR}"
+        fi
+        WINDOW=`tmux display -pt "${TMUX_PANE:?}" '#{window_name}'`
+        if [ $WINDOW == "bash" ]; then
+            export HISTFILE=~/.bash_history
+        else
+            PANE=`tmux display -pt "${TMUX_PANE:?}" '#{session_name}:#{window_name}:#{pane_index}'`
+            export HISTFILE="${HISTS_DIR}/bash_history_tmux_${PANE}"
+        fi
+    else
+        export HISTFILE=~/.bash_history
+    fi
+    history -a
+    history -r
+}
+export PROMPT_COMMAND="tmux_history"

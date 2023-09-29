@@ -398,7 +398,7 @@ set showmode
 
 nmap gr :tabprevious<CR>
 
-nmap bg :bnext<CR>
+nmap gt :bnext<CR> \| :tabnext<CR>
 nmap <leader>c :bdelete<CR>
 
 nmap <F1> :nohlsearch<CR>

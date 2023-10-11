@@ -63,7 +63,7 @@ set shiftwidth=4
 set listchars=eol:↲,tab:→→,trail:•,nbsp:↔
 "set list "відображення недрукованих символів
 
-set t_Co=256 " включити 256 кольорів
+set t_Co=256 "включити 256 кольорів
 
 colorscheme gruvbox
 " colorscheme PaperColor
@@ -127,7 +127,7 @@ Plug 'danro/rename.vim'
 
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-let g:airline_powerline_fonts = 1
+let g:airline_powerline_fonts = 0
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail'
@@ -398,7 +398,7 @@ set showmode
 
 nmap gr :tabprevious<CR>
 
-nmap gt :bnext<CR> \| :tabnext<CR>
+nmap gt :tabnext<CR> \| :bnext<CR>
 nmap <leader>c :bdelete<CR>
 
 nmap <F1> :nohlsearch<CR>
@@ -440,5 +440,9 @@ vmap <p> "_dP
 nmap <p> "_dP
 
 " copy to system clipboard
-vmap <leader>y "+y
-nmap <leader>Y "+Y
+vmap yy "+y
+nmap yy "+y
+
+" :%!jq
+command! FormatJson %!python -m json.tool
+command! FormatXml %!python -c "import xml.dom.minidom, sys; print(xml.dom.minidom.parse(sys.stdin).toprettyxml())"

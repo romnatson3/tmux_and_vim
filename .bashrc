@@ -117,19 +117,19 @@ if ! shopt -oq posix; then
 fi
 
 export TERM=xterm-256color
-export EDITOR=nvim
-export DISPLAY=172.22.240.1:0
+export EDITOR=vim
+# export DISPLAY=172.22.240.1:0
 alias mc='mc --skin modarin256'
 alias ll="$(cat ~/.ls)"
 alias acc='source env/bin/activate'
 alias ac='source /opt/ac.sh'
 
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
 if type rg &> /dev/null; then
   export FZF_DEFAULT_COMMAND='rg --files --hidden -g "!.git/*"'
   export FZF_DEFAULT_OPTS='-m --height 70% --border --preview-window "right:60%" --layout=default --margin=0 --preview "batcat --color=always --style=header,grid --line-range :500 {}"'
 fi
-
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 
 function tmux_history () {

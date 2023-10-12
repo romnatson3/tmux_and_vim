@@ -1,5 +1,5 @@
 "<F1> - 
-"<F2> - збереження без виходу
+"<F2> - збереження
 "<F3> - Copilot next
 "<F4> - Copilot panel
 "<F5> - NERDTreeToggle
@@ -12,25 +12,22 @@
 "<F12> - вихід без збереження
 
 
-"Prevent escape from moving the cursor one character to the left
-"set nocompatible "must be first line
-"inoremap <silent> <Esc> <C-O>:stopinsert<CR>
+" Prevent escape from moving the cursor one character to the left
 autocmd InsertLeave * :normal `^
-"Change cursor shape in different modes
+" Change cursor shape in different modes
 let &t_SI.="\e[5 q" "SI = INSERT mode
-let &t_SR.="\e[4 q" "SR = REPLACE mode
-let &t_EI.="\e[1 q" "EI = NORMAL mode (ELSE)
-"Cursor settings:
-""  1 -> blinking block
-""  2 -> solid block 
-""  3 -> blinking underscore
-""  4 -> solid underscore
-""  5 -> blinking vertical bar
-""  6 -> solid vertical bar
-
+let &t_SR.="\e[3 q" "SR = REPLACE mode
+let &t_EI.="\e[ q" "EI = NORMAL mode (ELSE)
+" Cursor settings:
+" 1 -> blinking block
+" 2 -> solid block 
+" 3 -> blinking underscore
+" 4 -> solid underscore
+" 5 -> blinking vertical bar
+" 6 -> solid vertical bar
 
 set number
-set relativenumber
+" set relativenumber
 set backspace=2
 set splitright
 set splitbelow
@@ -63,12 +60,13 @@ set shiftwidth=4
 set listchars=eol:↲,tab:→→,trail:•,nbsp:↔
 "set list "відображення недрукованих символів
 
-set t_Co=256 "включити 256 кольорів
+set foldmethod=indent
+set nofoldenable
 
-colorscheme gruvbox
-" colorscheme PaperColor
-" colorscheme molokai_dark
+set t_Co=256
 set background=dark
+
+set pastetoggle=<F8>
 
 ":Explore
 let g:netrw_banner = 0 "hide banner above files
@@ -81,12 +79,23 @@ autocmd VimEnter * :highlight LineNr ctermfg=237 ctermbg=None
 autocmd VimEnter * :highlight ColorColumn ctermbg=237
 "виділення курсора
 set cursorline
-autocmd VimEnter * :highlight CursorLine ctermbg=237
+autocmd VimEnter * :highlight CursorLine term=bold cterm=bold ctermbg=239
+autocmd VimEnter * :highlight CursorLineNr term=bold cterm=bold ctermbg=237
 autocmd VimEnter * :highlight Search term=reverse cterm=bold ctermfg=208 ctermbg=241
 autocmd VimEnter * :highlight IncSearch term=reverse cterm=bold ctermfg=208 ctermbg=241
+autocmd VimEnter * :highlight! link Visual CursorLine 
+" autocmd VimEnter * :highlight Visual cterm=reverse ctermbg=NONE
 
 
 call plug#begin('~/.vim/plugged')
+
+Plug 'sonph/onehalf', { 'rtp': 'vim' }
+Plug 'dracula/vim', { 'as': 'dracula' }
+Plug 'morhetz/gruvbox'
+Plug 'tomasr/molokai'
+Plug 'phanviet/vim-monokai-pro', { 'as': 'monokai-pro' }
+Plug 'jacoborus/tender.vim'
+Plug 'altercation/vim-colors-solarized', { 'as': 'solarized' }
 
 Plug 'Yggdroot/indentLine'
 let g:indentLine_color_term = 239
@@ -94,6 +103,25 @@ let g:indentLine_color_term = 239
 let g:indentLine_char = '┊'
 let g:indentLine_enabled = 1
 
+Plug 'vim-python/python-syntax'
+let g:python_highlight_all = 1
+syntax enable
+
+Plug 'roxma/vim-tmux-clipboard'
+
+Plug 'tpope/vim-commentary'
+vmap gb  <Plug>Commentary
+nmap gbb  <Plug>CommentaryLine
+
+Plug 'majutsushi/tagbar' "apt-get install ctags
+nmap <F6> :TagbarToggle<CR>
+
+Plug 'ryanoasis/vim-devicons'
+
+Plug 'tpope/vim-fugitive'
+
+
+"=============================== AutoComplPop =================================="
 Plug 'vim-scripts/AutoComplPop'
 " Navigate the complete menu items like CTRL+n / CTRL+p would.
 inoremap <expr> <Down> pumvisible() ? "<C-n>" :"<Down>"
@@ -104,62 +132,44 @@ inoremap <expr> <CR> pumvisible() ? "<C-y>" :"<CR>"
 " Cancel the complete menu item like CTRL+e would.
 inoremap <expr> <Left> pumvisible() ? "<C-e>" : "<Left>"
 
-Plug 'vim-python/python-syntax'
-let g:python_highlight_all = 1
-syntax enable
-
+"================================= Undotree ===================================="
 Plug 'mbbill/undotree'
 nnoremap <leader>u :UndotreeToggle<CR>
-set undofile                       " Save undos after file closes
-set undodir=~/.local/share/undodir/vim " where to save undo histories
-set undolevels=1000                " How many undos
-set undoreload=10000               " number of lines to save for undo
+set undofile                            " Save undos after file closes
+set undodir=~/.local/share/undodir/vim  " where to save undo histories
+set undolevels=1000                     " How many undos
+set undoreload=10000                    " number of lines to save for undo
 
-Plug 'roxma/vim-tmux-clipboard'
-
-Plug 'tpope/vim-commentary'
-vmap gb  <Plug>Commentary
-nmap gbb  <Plug>CommentaryLine
-
-Plug 'nvie/vim-togglemouse'
-
-Plug 'danro/rename.vim'
-
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-let g:airline_powerline_fonts = 0
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#branch#enabled = 1
-let g:airline#extensions#tabline#formatter = 'unique_tail'
-let g:airline_theme = 'angr'
-nmap <C-n> <esc>:tabedit<CR>
-
-Plug 'majutsushi/tagbar' "забезпечує простий спосіб для перегляду теги поточного файлу і отримати огляд своїй структурі.
-"apt-get install ctags
-nmap <F6> :TagbarToggle<CR>
-
-Plug 'Raimondi/delimitMate' "автоматичне закриття лапок, дужок і т.д.
-" let delimitMate_autoclose = 0 
-" au FileType html,python let b:delimitMate_autoclose = 0
-au FileType html let b:delimitMate_matchpairs = "(:),[:],{:}"
-
+"================================= NERDTree ===================================="
 Plug 'scrooloose/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 nmap <F5> :NERDTreeToggle<CR>
 imap <F5> <Esc>:NERDTreeToggle<CR>
 vmap <F5> <Esc>:NERDTreeToggle<CR>
-let NERDTreeShowHidden=1 " shift+i 
+let NERDTreeShowHidden=1
+let NERDTreeMapOpenSplit='x'
+let NERDTreeMapOpenVSplit='v'
 let g:NERDTreeWinSize=30
 
-Plug 'ryanoasis/vim-devicons'
-
-Plug 'alvan/vim-closetag'
-"filenames like *.xml, *.html, *.xhtml, ...
-let g:closetag_filenames = "*.html,*.xhtml,*.phtml"
-
-Plug 'tpope/vim-fugitive'
-
+"================================= Airline ====================================="
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+let g:airline_powerline_fonts = 0
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#branch#enabled = 1
+let g:airline#extensions#tabline#formatter = 'unique_tail'
+let g:airline#extensions#tabline#show_buffers = 0
+let g:airline#extensions#tabline#show_tabs = 1
+let g:airline#extensions#tabline#show_tab_count = 0
+let g:airline#extensions#tabline#show_tab_nr = 0
+let g:airline#extensions#tabline#show_close_button = 0
+let g:airline#extensions#tabline#show_tab_type = 0
+let airline#extensions#tabline#show_splits = 0
+let g:airline_theme = 'dracula'
+autocmd VimEnter * :highlight! link airline_tabmod airline_tabsel
+autocmd VimEnter * :highlight airline_tabfill ctermbg=None
+nmap <C-n> <esc>:tabedit<CR>
 
 "================================= Debuger ====================================="
 Plug 'puremourning/vimspector'
@@ -171,50 +181,6 @@ nmap <leader><F5> :call vimspector#Launch()<CR>
 nmap <leader><F6> :call vimspector#Continue()<CR>
 let g:vimspector_sidebar_width = 75
 let g:vimspector_bottombar_height = 15
-
-"cat .vimspector.json, copy this file to project folder
-"{
-"    "configurations": {
-"        "debugpy": {
-"            "adapter": "debugpy",
-"            "configuration": {
-"                "type": "python",
-"                "request": "launch",
-"                "program": "${file}"
-"            },
-"            "breakpoints": {
-"                "exception": {
-"                    "raised": "N",
-"                    "uncaught": "Y",
-"                    "userUnhandled": "N"
-"                }
-"            }
-"        }
-"    }
-"}
-"{
-"    "$shema": "https://puremourning.github.com/vimspector/schema/vimspector.schema.json",
-"    "configurations": {
-"        "django": {
-"            "adapter": "debugpy",
-"            "configuration": {
-"                "request": "launch",
-"                "python": "${VIRTUAL_ENV}/bin/python3",
-"                "program": "${workspaceRoot}/manage.py",
-"                "args": [ "runserver", "0.0.0.0:8000", "--noreload" ],
-"                "django": true,
-"                "stopOnEntry": true
-"            },
-"            "breakpoints": {
-"                "exception": {
-"                    "raised": "N",
-"                    "uncaught": "Y",
-"                    "userUnhandled": "N"
-"                }
-"            }
-"        }
-"    }
-"}
 
 "================================= Copilot ====================================="
 Plug 'github/copilot.vim'
@@ -235,7 +201,9 @@ nnoremap <Leader>g :Rg<CR>
 nnoremap <Leader>m :Marks<CR>
 
 let g:fzf_height = '50%'
-" command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--exact']}), <bang>0)
+let g:fzf_action = {'ctrl-t': 'tab split', 'ctrl-x': 'split', 'ctrl-v': 'vsplit'}
+
+command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--exact']}), <bang>0)
 command! -bang -nargs=* Rg call fzf#vim#grep('rg --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1, fzf#vim#with_preview({'options': ['--exact']}), <bang>0)
 
 " Add to ~/.bashrc - загальні настройки, будуть працювати через :FZF
@@ -244,7 +212,7 @@ command! -bang -nargs=* Rg call fzf#vim#grep('rg --line-number --no-heading --co
 "   export FZF_DEFAULT_OPTS='-m --height 70% --border --preview-window "right:60%" --layout=default --margin=0 --preview "batcat --color=always --style=header,grid --line-range :500 {}"'
 " fi
 
-"==============================  ACK  =========================================
+"================================  ACK  ========================================"
 Plug 'mileszs/ack.vim' " пошук по вмісту файлів проекту
 "потрібно також зробити - apt-get install ack-grep, якщо не працює тоді <let g:ackprg = "ag --vimgrep">
 ":Ack [опції]... шаблон [файл або каталог]
@@ -357,12 +325,20 @@ inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 "================================= Ctrl-P ====================================="
 Plug 'kien/ctrlp.vim'
-let g:ctrlp_by_filename = 1 "пошук тільки по імені файла
-let g:ctrlp_show_hidden = 1 "CtrlP find .dotfiles
-let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
-if executable('rg')
-  let g:ctrlp_user_command = 'rg %s --files --hidden --glob ""'
-endif
+let g:ctrlp_cmd = 'CtrlP'
+" let g:ctrlp_cmd = 'CtrlPMixed'
+" let g:ctrlp_cmd = 'CtrlPMRU'
+let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:20,results:100'
+let g:ctrlp_by_filename = 1
+let g:ctrlp_regexp = 1
+let g:ctrlp_show_hidden = 1
+let g:ctrlp_custom_ignore = {
+\ 'dir':  '\v[\/](\.git|env)$',
+\ 'file': '\v\.(exe|so|dll|pyc)$',
+\ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
+\ }
+" let g:ctrlp_user_command = 'find %s -type f -not -path "*/.git/*"'
+
 "<F5> to purge the cache for the current directory to get new files, remove deleted files and apply new ignore options.
 "<c-f> and <c-b> to cycle between modes.
 "<c-d> to switch to filename only search instead of full path.
@@ -372,34 +348,28 @@ endif
 "<c-n>, <c-p> to select the next/previous string in the prompt's history.
 "<c-y> to create a new file and its parent directories.
 "<c-z> to mark/unmark multiple files and <c-o> to open them.
-
-"=================================== Fold ====================================="
-Plug 'kalekundert/vim-coiled-snake'
-Plug 'Konfekt/FastFold'
-set foldmethod=indent
-set nofoldenable
-
-" zo: Open a fold
-" zc: Close a fold
-" zk: Jump to the previous fold
-" zj: Jump to the next fold
-" zR: Open every fold
-" zM: Close every fold
-
 "=============================================================================="
+
 call plug#end()
+
+" colorscheme gruvbox
+" colorscheme dracula
+" colorscheme onehalfdark
+" colorscheme molokai
+colorscheme monokai_pro
+" colorscheme tender
+" colorscheme solarized
+" highlight Normal ctermbg=235
+highlight Pmenu ctermbg=235
 
 
 nmap <leader>b :Buffers<CR>
 
-nnoremap <F8> :set invpaste paste?<CR>
-set pastetoggle=<F8>
-set showmode        
+" nmap gt :tabnext<CR> \| :bnext<CR>
 
-nmap gr :tabprevious<CR>
-
-nmap gt :tabnext<CR> \| :bnext<CR>
 nmap <leader>c :bdelete<CR>
+
+nmap <leader>t :terminal<CR>
 
 nmap <F1> :nohlsearch<CR>
 
@@ -417,12 +387,6 @@ imap <F12> <Esc>:q!<CR>
 
 nnoremap <Tab> <C-w>w
 
-nnoremap <C-z> :vertical resize -1<CR>
-nnoremap <C-x> :vertical resize +1<CR>
-
-nnoremap <C-j> :horizontal resize -1<CR>
-nnoremap <C-k> :horizontal resize +1<CR>
-
 "Save the visual selection after having pressed > or <
 vnoremap L >gv
 vnoremap H <gv
@@ -436,13 +400,100 @@ nmap N Nzzzv
 
 " paste over a selection it will replace the default register with the contents of the selection
 " xnoremap p pgvy
-vmap <p> "_dP
-nmap <p> "_dP
-
-" copy to system clipboard
-vmap yy "+y
-nmap yy "+y
+xnoremap p "_dP
 
 " :%!jq
 command! FormatJson %!python -m json.tool
 command! FormatXml %!python -c "import xml.dom.minidom, sys; print(xml.dom.minidom.parse(sys.stdin).toprettyxml())"
+
+
+"============================== Mouse toggle ==================================="
+fun! g:ToggleMouse()
+    if !exists("s:old_mouse")
+        let s:old_mouse = "a"
+    endif
+
+    if &mouse == ""
+        let &mouse = s:old_mouse
+        echo "Mouse is for Vim (" . &mouse . ")"
+    else
+        let s:old_mouse = &mouse
+        let &mouse=""
+        echo "Mouse is for terminal"
+    endif
+endfunction
+
+noremap <F9> :call <SID>ToggleMouse()<CR>
+inoremap <F9> <Esc>:call <SID>ToggleMouse()<CR>a
+"=============================================================================="
+
+
+".vimspector.json, copy this file to project folder
+"{
+"    "configurations": {
+"        "debugpy": {
+"            "adapter": "debugpy",
+"            "configuration": {
+"                "type": "python",
+"                "request": "launch",
+"                "program": "${file}"
+"            },
+"            "breakpoints": {
+"                "exception": {
+"                    "raised": "N",
+"                    "uncaught": "Y",
+"                    "userUnhandled": "N"
+"                }
+"            }
+"        }
+"    }
+"}
+
+"Django project config
+"{
+"    "$shema": "https://puremourning.github.com/vimspector/schema/vimspector.schema.json",
+"    "configurations": {
+"        "django": {
+"            "adapter": "debugpy",
+"            "configuration": {
+"                "request": "launch",
+"                "python": "${VIRTUAL_ENV}/bin/python3",
+"                "program": "${workspaceRoot}/manage.py",
+"                "args": [ "runserver", "0.0.0.0:8000", "--noreload" ],
+"                "django": true,
+"                "stopOnEntry": true
+"            },
+"            "breakpoints": {
+"                "exception": {
+"                    "raised": "N",
+"                    "uncaught": "Y",
+"                    "userUnhandled": "N"
+"                }
+"            }
+"        }
+"    }
+"}
+
+"Celery
+"{
+"    "configurations": {
+"        "debugpy": {
+"            "adapter": "debugpy",
+"            "configuration": {
+"                "type": "python",
+"                "python": "${VIRTUAL_ENV}/bin/python",
+"                "request": "launch",
+"                "cwd": "${workspaceRoot}",
+"                "program": "/opt/test/env/bin/celery",
+"                "args": [ "-A", "test_celery", "worker", "-l", "INFO" ]
+"            },
+"            "breakpoints": {
+"                "exception": {
+"                    "raised": "N",
+"                    "uncaught": "Y",
+"                    "userUnhandled": "N"
+"                }
+"            }
+"        }
+"    }
+"}

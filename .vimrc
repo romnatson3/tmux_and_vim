@@ -3,8 +3,8 @@
 "<F3> - Copilot next
 "<F4> - Copilot panel
 "<F5> - NERDTreeToggle
-"<F6> - TagbarToggle
-"<F7> - 
+"<F6> -
+"<F7> - TagbarToggle
 "<F8> - pastetoggle 
 "<F9> - mouse toggle
 "<F10> - збереження і вихід
@@ -114,7 +114,7 @@ vmap gb  <Plug>Commentary
 nmap gbb  <Plug>CommentaryLine
 
 Plug 'majutsushi/tagbar' "apt-get install ctags
-nmap <F6> :TagbarToggle<CR>
+nmap <F7> :TagbarToggle<CR>
 
 Plug 'ryanoasis/vim-devicons'
 

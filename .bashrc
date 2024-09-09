@@ -122,8 +122,6 @@ export EDITOR=nvim
 # export DISPLAY=172.22.240.1:0
 alias mc='mc --skin modarin256'
 alias ll="$(cat ~/.ls)"
-alias acc='source env/bin/activate'
-alias ac='source /opt/ac.sh'
 
 export PATH=$PATH:/opt/diff-so-fancy
 
@@ -155,3 +153,5 @@ function tmux_history () {
     history -r
 }
 export PROMPT_COMMAND="tmux_history"
+
+# export TERM=screen-256color

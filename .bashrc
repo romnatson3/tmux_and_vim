@@ -130,6 +130,7 @@ export PATH=$PATH:/opt/diff-so-fancy
 if type rg &> /dev/null; then
   export FZF_DEFAULT_COMMAND='rg --files --hidden -g "!.git/*"'
   export FZF_DEFAULT_OPTS='-m --height 70% --border --preview-window "right:60%" --layout=default --margin=0 --preview "batcat --color=always --style=header,grid --line-range :500 {}"'
+  export FZF_CTRL_R_OPTS="--preview ''"
 fi
 
 
@@ -154,4 +155,4 @@ function tmux_history () {
 }
 export PROMPT_COMMAND="tmux_history"
 
-# export TERM=screen-256color
+export TERM=screen-256color

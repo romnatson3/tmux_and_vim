@@ -155,4 +155,4 @@ function tmux_history () {
 }
 export PROMPT_COMMAND="tmux_history"
 
-export TERM=screen-256color
+# export TERM=screen-256color
